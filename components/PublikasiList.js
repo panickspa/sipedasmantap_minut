@@ -1,6 +1,6 @@
 import React from 'react'
 import { FlatList, RefreshControl, ScrollView, StyleSheet, View, Image } from 'react-native'
-import { ActivityIndicator, Caption, Headline, IconButton, Text } from 'react-native-paper'
+import { ActivityIndicator, Caption, Headline, Button, Text } from 'react-native-paper'
 import { defaultImage, default_domain, getDetPublication, getPublication } from '../helper/api'
 import Share from 'react-native-share'
 import RNFetchBlob from 'rn-fetch-blob'
@@ -96,28 +96,32 @@ const PublikasiWindow =  (props) => {
                     flex: 1
                 }}>
                 <Text style={{fontWeight: 'bold'}}>{props.title}</Text>
-                <HTML
+                <Caption>
+                    {props.abstract ? props.abstract.replace(/(<[a-zA-Z])([a-zA-Z0-9:;\.\s\(\)\-\,=\\\"%]*)(>)/g, "").replace(/[\n\r]/g, ' ').replace(/(<\/[a-zA-Z])([a-zA-Z0-9:;\.\s\(\)\-\,=\\\"%]*)(>)/g, '') : ' '}
+                </Caption>
+                {/* <HTML
                 style={{
                     textAlign: 'justify'
                 }}
+                ignoredStyles={['font-size', 'background-color', 'color', 'margin', 'padding', 'font-family']}
                 source={{
-                    html: props.abstract ? props.abstract.replace(/\n/g, " ") : '<br>'
+                    html: props.abstract ? props.abstract.replace(/(<[a-zA-Z])([a-zA-Z0-9:;\.\s\(\)\-\,=\\\"%]*)(>)/g, "").replace(/[\n\r]/g, ' ').replace(/(<\/[a-zA-Z]>)/g, '') : ' '
                 }}
                 baseFontStyle={{
                     textAlign: 'justify',
                     fontSize: 12
-                }}/>
+                }}/> */}
                 {/* <Caption style={{
                     textAlign: 'justify'
                 }}>{props.abstract}</Caption> */}
                 <View style={{
                     flexDirection: 'row'
                 }}>
-                    <IconButton icon="download"
+                    <Button icon="download"
                         onPress={()=>{
                             donwloadPDF(props.pdf, props.title)
                         }}
-                    />
+                    >Download</Button>
                     {/* <IconButton icon="share-variant"
                         onPress={()=>{
                             sharePDF(props.pdf, props.title)

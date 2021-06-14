@@ -4,15 +4,40 @@ import { Chip, Portal, TouchableRipple, Modal, Title } from 'react-native-paper'
 import { years, months} from '../helper/date'
 import PublikasiList from './PublikasiList'
 
-function tabIconColor(f){
-    return  f ? {
-      backgroundColor: "white",
-      color: '#004D91'
-    } : {
-      backgroundColor: "#004D91",
-      color: 'white'
-    }
-  }
+const YearList = (props)=>{
+    const [year, setYear] = React.useState(props.year)
+
+    return <FlatList
+        keyExtractor={(item,i) => `${item}`}
+        scrollEnabled={true}
+        data={years}
+        initialNumToRender={10}
+        contentContainerStyle={{
+            justifyContent: 'center',
+            alignItems:'center'
+        }}
+        keyExtractor={(item) => item}
+        renderItem={
+            ({item}) => (
+                <Chip 
+                key={item}
+                style={{
+                    fontWeight:'bold',
+                    marginVertical: 10,
+                    marginHorizontal: 2,
+                }}
+                selected={ year == String(item)}
+                onPress={()=>{
+                    if(props.yearChange) props.yearChange(String(item))
+                    setYear(String(item))
+                }}>
+                    {String(item)}
+                </Chip>
+            )
+        }
+        extraData={year}
+    />
+}
 
 const PublikasiView = (props) => {
     // const [year, setYear] = React.useState(props.year)
@@ -72,7 +97,11 @@ const PublikasiView = (props) => {
                     }}>
                         Pilih Tahun
                     </Title>
-                    <FlatList
+                    <YearList
+                        year={year}
+                        yearChange={(y)=>{setYsModal(y)}}
+                    />
+                    {/* <FlatList
                         keyExtractor={(item,i) => `${item}`}
                         scrollEnabled={true}
                         data={years}
@@ -96,7 +125,7 @@ const PublikasiView = (props) => {
                                 </Chip>
                             )
                         }
-                    />
+                    /> */}
                 </Modal>
                 {/* <Modal 
                     visible={mModal}

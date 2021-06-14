@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, useWindowDimensions } from 'react-native';
-import { Title, Text, IconButton } from 'react-native-paper';
+import { Title, Text, IconButton, Caption } from 'react-native-paper';
 import {getPressReleaseDetail} from '../helper/api'
 import HTML from 'react-native-render-html'
 import {decode as htmlDecode} from 'html-entities'
@@ -85,10 +85,13 @@ const PressReleaseView = (props) => {
                 <View style={{
                     width:widthContent
                 }}>
-                    <HTML
+                    {/* <HTML
                         source={{html: String(pR.abstract)}}
                         contentWidth={widthContent}
-                    />
+                    /> */}
+                    <Caption>
+                        {pR.abstract.replace(/(<[a-zA-Z])([a-zA-Z0-9:;\.\s\(\)\-\,=\\\"%]*)(>)/g, '').replace(/(<\/[a-zA-Z])([a-zA-Z0-9:;\.\s\(\)\-\,=\\\"%]*)(>)/g, '')}
+                    </Caption>
                 </View>
                 <View style={{
                     flexDirection: 'column-reverse',
