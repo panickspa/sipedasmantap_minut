@@ -66,22 +66,6 @@ const HomeView = (props) => {
                         keyExtractor={item => `menu-${item.nav}`}
                         renderItem={({item}) =>{
                             return (
-                                // <Text>{(item.icon)}</Text>
-                                // <Button icon={item.icon} 
-                                // onPress={()=>{
-                                //         console.log("menu clicked :",item.menu)
-                                //         props.menuPressed(item.nav)
-                                //     }}
-                                // style={{
-                                //     flexDirection: 'column'
-                                // }} children={
-                                //     <Caption style={{
-                                //         color:'white',
-                                //         alignItems:"center",
-                                //         width: '100%',
-                                //         textAlign: 'center',
-                                //     }}>{item.menu}</Caption>
-                                // }></Button>
                                 <Pressable android_ripple={true} 
                                 onPress={()=>{
                                     console.log("menu clicked :",item.menu)

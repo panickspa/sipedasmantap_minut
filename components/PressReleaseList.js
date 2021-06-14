@@ -1,6 +1,6 @@
 import React from 'react';
-import { FlatList, RefreshControl, Text, View } from "react-native";
-import {ActivityIndicator} from "react-native-paper"
+import { FlatList, RefreshControl, ScrollView, Text, View } from "react-native";
+import {ActivityIndicator, Headline} from "react-native-paper"
 import {getPressReleaseList, default_domain} from "../helper/api"
 import PressReleaseView from "./PressReleaseView"
 
@@ -12,8 +12,10 @@ const PressReleaseList = () => {
     const [curPages, setCurPages] = React.useState(0)
     const [loadMore, setLoadMore] = React.useState(false)
     const [counter, setCounter] = React.useState(0)
+    const [errNetwork, setErrNetwork] = React.useState(false)
 
     const getPress = () => {
+        setErrNetwork(false)
         getPressReleaseList({
             domain: default_domain
         })
@@ -32,6 +34,7 @@ const PressReleaseList = () => {
             })
             .catch(error => {
                 console.log(error)
+                setErrNetwork(true)
             })
             .finally(()=>{
                 let c = counter+1
@@ -49,13 +52,14 @@ const PressReleaseList = () => {
             setLoaded(true)
             setCurPage(1)
         }
+        else if(errNetwork) setLoaded(true)
         else setLoaded(false)
-    },[pRList, counter])
+    },[pRList, errNetwork, counter])
 
     const nextPage = ()=>{
         let next = curPage+1
         if(next < curPages+1) {
-            setCurPage(next)
+            // setCurPage(next)
             if(!loadMore){
                 setLoadMore(true)
             }
@@ -67,6 +71,7 @@ const PressReleaseList = () => {
                 if(resp.status == 'OK')
                     if(resp["data-availability"] == "available"){
                         setPRList([...pRList, ...resp.data[1]])
+                        setCurPage(resp.data[0].page)
                     }
             })
             .catch(error => {
@@ -77,7 +82,7 @@ const PressReleaseList = () => {
     }
 
     return (
-        loaded ? 
+        loaded && !errNetwork ? 
         <FlatList
             bounces={true}
             alwaysBounceVertical={true}
@@ -106,7 +111,27 @@ const PressReleaseList = () => {
                 }}
             />}
             // extraData={newPRList}
-        /> : <ActivityIndicator animating={true}/>
+        /> : errNetwork ?<ScrollView
+            style={{
+                flex: 1
+            }}
+            refreshControl={
+                <RefreshControl
+                    refreshing={!loaded}
+                    onRefresh={()=>{
+                        // setLoaded(false)
+                        setPRList([])
+                        getPress()
+                    }}
+                />
+            }
+        >
+            <Headline
+                style={{
+                    textAlign: 'center'
+                }}
+            >Internet Tidak Ada, silahkan cek kembali koneksi anda</Headline>
+        </ScrollView> : <ActivityIndicator animating={true}/>
         // <PressReleaseView id={pRList[0].brs_id}/>: <ActivityIndicator animating={true}/>
     );
 }

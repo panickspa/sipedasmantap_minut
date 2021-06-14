@@ -1,7 +1,7 @@
 import React from 'react'
 import { FlatList, ScrollView, RefreshControl, View } from 'react-native'
 
-import { ActivityIndicator, Text, List, Title } from 'react-native-paper'
+import { ActivityIndicator, Text, List, Headline } from 'react-native-paper'
 import { getIndikatorStrategis, getSubCat, getSubject } from '../helper/api'
 import IndicatorList from './IndicatorList'
 import { 
@@ -36,6 +36,7 @@ const IndicatorView = () => {
     const [jpm, setJpm] = React.useState([])
     const [kt, setKt] = React.useState([])
     const [sr, setSr] = React.useState([])
+    const [errNetwork, setErrNetwork] = React.useState(false)
 
     // const [text, setText] = React.useState('')
 
@@ -44,8 +45,8 @@ const IndicatorView = () => {
     // }
 
     const getIndicator = () => {
+        setErrNetwork(false)
         getAll().then(e => {
-            // console.log(JSON.stringify(e.length))
             setIndicators(e.map((ind, i )=> {
                 // console.log(i)
                 return ind.sort(function(a, b) {
@@ -55,6 +56,9 @@ const IndicatorView = () => {
             // setIndicators(e.flat().sort(function(a, b) {
             //     return Number(b.tahun) - Number(a.tahun)
             //   }))
+        }).catch(err => {
+            // console.log(err)
+            setErrNetwork(true)
         })
     }
 
@@ -67,8 +71,9 @@ const IndicatorView = () => {
 
     React.useEffect(()=>{
         if(indicators.length > 0) setLoaded(true)
+        else if(errNetwork) setLoaded(true)
         else setLoaded(false)
-    }, [indicators])
+    }, [indicators, errNetwork])
 
 
     return (
@@ -83,7 +88,7 @@ const IndicatorView = () => {
         //         return (<Text>{item.key}</Text>)
         //     }}
         // />
-        loaded ? 
+        loaded && !errNetwork ? 
         <List.Section>
             <FlatList
                 data={indicators}
@@ -111,7 +116,28 @@ const IndicatorView = () => {
                 }
             />
         </List.Section>
-        : <ActivityIndicator style={{marginTop: 10}} animating={true}/>
+        :  errNetwork ?  <ScrollView
+                style={{
+                    flex: 1
+                }}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={!loaded}
+                        onRefresh={()=>{
+                            // setLoaded(false)
+                            setIndicators([])
+                            getIndicator()
+                        }}
+                    />
+                }
+        >
+            <Headline
+                    style={{
+                        textAlign: 'center'
+                    }}
+                >Internet Tidak Ada, silahkan cek kembali koneksi anda</Headline>
+            </ScrollView>  :
+        <ActivityIndicator style={{marginTop: 10}} animating={true}/>
     )
 }
 

@@ -24,9 +24,7 @@ const getInfografis = (req = {
     domain: default_domain,
     page: 0,
     keyword: ''
-}) => {
-    console.log(
-        `https://webapi.bps.go.id/${version}/api/list/model/infographic/lang/${
+}) => fetch(`https://webapi.bps.go.id/${version}/api/list/model/infographic/lang/${
     req.lang ? req.lang : "ind"
     }/domain/${
         req.domain
@@ -34,17 +32,7 @@ const getInfografis = (req = {
         optVal(['page', req.page])
     }${
         optVal(['keyword', req.keyword])
-    }key/${apiKey}/`
-    )
-    return fetch(`https://webapi.bps.go.id/${version}/api/list/model/infographic/lang/${
-    req.lang ? req.lang : "ind"
-    }/domain/${
-        req.domain
-    }/${
-        optVal(['page', req.page])
-    }${
-        optVal(['keyword', req.keyword])
-    }key/${apiKey}/`).then(resp => resp.json())}
+    }key/${apiKey}/`).then(resp => resp.json())
 
 const getIndikatorStrategis = (req={
     domain: default_domain,
@@ -160,6 +148,31 @@ const getSubCat = (req={
     }key/${apiKey}`
 )
 
+const getPublication = (req={
+    domain: default_domain,
+    lang: 'ind',
+    page: 0,
+    month: '',
+    year: ''
+})=> fetch(
+    `https://webapi.bps.go.id/v1/api/list/model/publication/domain/${req.domain}/${
+        optVal(['page', req.page])
+    }${
+        optVal(['lang', req.lang])
+    }${
+        optVal(['month', req.month])
+    }${
+        optVal(['year', req.year])
+    }key/${apiKey}`
+).then(resp => resp.json())
+
+const getDetPublication = (req={
+    domain: default_domain,
+    lang: 'ind',
+    id: 'REQUIRED'
+}) => fetch(`https://webapi.bps.go.id/v1/api/view/model/publication/domain/${req.domain}/lang/${req.lang}/id/${req.id}/key/${apiKey}/`)
+.then(resp => resp.json())
+
 
 const Api = {
     /* constant */
@@ -194,6 +207,8 @@ const Methods = {
     getDerVar : getDerVar,
     getSubCat : getSubCat,
     getSubject : getSubject,
+    getPublication : getPublication,
+    getDetPublication : getDetPublication
 }
 
 const Constant = {
@@ -218,6 +233,8 @@ exports.getDerPeriodData = getDerPeriodData
 exports.getDerVar = getDerVar
 exports.getSubCat = getSubCat
 exports.getSubject = getSubject
+exports.getPublication = getPublication
+exports.getDetPublication = getDetPublication
 
 /* Bundle */
 exports.Methods = Methods

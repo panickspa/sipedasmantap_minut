@@ -1,6 +1,6 @@
 import React from 'react'
-import { View } from 'react-native'
-import { ActivityIndicator } from 'react-native-paper'
+import { ScrollView, View, RefreshControl } from 'react-native'
+import { ActivityIndicator, Headline } from 'react-native-paper'
 import {default_domain, getInfografis} from '../helper/api'
 import InfografisList from './InfografisList'
 
@@ -12,8 +12,11 @@ const InfografisView = () => {
     const [loaded, setLoaded] = React.useState(false)
     const [loadMore, setLoadMore] = React.useState(false)
     const [counter, setCounter] = React.useState(0)
+    const [errNetwork, setErrNetwork] = React.useState(false)
+    const [noData, setNoData] = React.useState(false)
 
     const getInfo = (req) => {
+        setErrNetwork(false)
         getInfografis({
             domain: req.domain,
         }).then(resp => {
@@ -24,10 +27,14 @@ const InfografisView = () => {
                     // console.log(resp.data[0])
                     setCurPage(resp.data[0].page)
                     setCurPages(resp.data[0].pages)
+                }else{
+                    setNoData(true)
+                    setLoaded(true)
                 }
         })
         .catch(err => {
-            console.log(err)
+            console.log('network error', err)
+            setErrNetwork(true)
         })
         .finally(()=>{
             let c = counter+1;
@@ -43,17 +50,19 @@ const InfografisView = () => {
     React.useEffect(()=>{
         if(infos.length > 0 ){
             setLoaded(true)
-        }else{
+        }
+        else if(errNetwork) setLoaded(true)
+        else{
             setLoaded(false)
         }
-    }, [infos, counter])
+    }, [infos, errNetwork, counter])
 
     const nextInfo = ()=>{
         const next = curPage+1
         console.log(next)
         if(next < curPages+1) {
             if(!loadMore) setLoadMore(true)
-            setCurPage(next)
+            // setCurPage(next)
             getInfografis({
                 domain: default_domain,
                 page: next
@@ -63,7 +72,8 @@ const InfografisView = () => {
                 if(resp.status == 'OK')
                     if(resp["data-availability"] == "available"){
                         setInfos([...infos, ...resp.data[1]])
-                        console.log('info', resp.data[0].page)
+                        setCurPage(resp.data[0].page)
+                        // console.log('info', resp.data[0].page)
                     }
             })
             .catch(error => {
@@ -75,12 +85,23 @@ const InfografisView = () => {
     }
 
     function indLoadMore(){
-        return loadMore ? 'flex' : 'none'
+        return loadMore && loaded ? 'flex' : 'none'
+    }
+
+    const loadMoreIndicator = ()=>{
+        if(loadMore && loaded){
+            return <ActivityIndicator style={{marginTop: 10, display: indLoadMore(), position:'absolute', alignSelf:'center', marginTop: 10}} animating={true}/>
+        }
     }
 
     return (
-        <View>
-            {loaded ? 
+        <View
+            style={{
+                flex:1
+            }}
+        >
+            {
+        loaded && !errNetwork ? 
             <InfografisList data={infos}
                 endReached={() => {
                     console.log('end reach')
@@ -95,8 +116,31 @@ const InfografisView = () => {
                         domain: default_domain
                     })
                 }}/> 
-            : <ActivityIndicator style={{marginTop: 10}} animating={true}/>}
-            <ActivityIndicator style={{marginTop: 10, display: indLoadMore()}} animating={true}/>
+        : errNetwork ? <ScrollView
+            style={{
+                flex: 1
+            }}
+            refreshControl={
+                <RefreshControl
+                    refreshing={!loaded}
+                    onRefresh={()=>{
+                        setLoaded(false)
+                        setInfos([])
+                        getInfo({
+                            domain: default_domain
+                        })
+                    }}
+                />
+            }
+        >
+            <Headline
+                style={{
+                    textAlign: 'center'
+                }}
+            >Internet Tidak Ada, silahkan cek kembali koneksi anda</Headline>
+        </ScrollView> : <ActivityIndicator style={{marginTop: 10}} animating={true}/>
+        }
+            {loadMoreIndicator()}
         </View>
     )
 }
