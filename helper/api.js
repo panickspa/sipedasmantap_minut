@@ -8,7 +8,9 @@ const apiKey = "23b53e3e77445b3e54c11c60604350bf"
 const defaultImage = require('../images/default.png')
 
 /* private method */
-const optVal = (e=['page', 1]) => e[1] ? `${e[0]}/${e[1]}/` : ''
+const optVal = (e=['keyword', 'some keyword']) => e[1] ? `${e[0]}/${e[1]}/` : ''
+
+const optValNum = (e=['var_id', 1] ) => e[1] > -1 ? `${e[0]}/${e[1]}/` : ''
 
 /* exported method */
 const getPressReleaseDetail = (domain,id) => fetch(
@@ -50,9 +52,7 @@ const getDynData = (req={
     vervar: 0,
     th: 0,
     turth: 0
-}) => fetch(`https://webapi.bps.go.id/${version}/api/list/model/data/lang/ind/domain/${req.domain}/${
-    optVal(['var', req.var])
-}var/${req.var}/${
+}) => fetch(`https://webapi.bps.go.id/${version}/api/list/model/data/lang/ind/domain/${req.domain}/var/${req.var}/${
     optVal(['turvar', req.turvar])
 }${
     optVal(['vervar', req.vervar])
@@ -67,7 +67,8 @@ const getVar = (req={
     page: 0,
     year: currentDate.getFullYear(),
     area: '',
-    vervar: ''
+    vervar: '',
+    subject: 0
 }) => fetch(`https://webapi.bps.go.id/${version}/api/list/model/var/domain/${req.domain}/${
     req.subject ? `subject/${req.subject}/` : ''
 }${
@@ -77,7 +78,7 @@ const getVar = (req={
 }${
     optVal(['area', req.area])
 }${
-    optVal(['vervar', reg.vervar])
+    optVal(['vervar', req.vervar])
 }key/${apiKey}/`).then(r => r.json())
 
 const getVervar = (req={
@@ -115,7 +116,7 @@ const getDerVar = (req = {
     var: '',
     page: 0
 })=>fetch(
-    `https://webapi.bps.go.id/${version}/api/list/model/turvar/${req.domain}/${
+    `https://webapi.bps.go.id/${version}/api/list/model/turvar/domain/${req.domain}/${
         optVal(['var', req.var])
     }${
         optVal(['page', req.page])
@@ -127,33 +128,33 @@ const getSubject = (req={
     lang: 'ind',
     subcat: '',
     page: 0
-})=>fetch(
-    `https://webapi.bps.go.id/v1/list/model/subject/domain/${req.domain}/${
-        optVal(['lang', req.lang])
-    }${
-        optVal(['subcat', req.subcat])
-    }${
-        optVal(['page', req.page])
-    }key/${apiKey}/`
-)
+})=> fetch(`https://webapi.bps.go.id/${version}/api/list/model/subject/domain/${req.domain}/${
+    optVal(['lang', req.lang])
+}${
+    optValNum(['subcat', req.subcat])
+}${
+    optVal(['page', req.page])
+}key/${apiKey}/`).then(r => r.json())
+
 const getSubCat = (req={
     domain: default_domain,
     lang: 'ind',
     page: 0,
 })=>fetch(
-    `https://webapi.bps.go.id/v1/list/model/subcat/domain${req.domain}/${
+    `https://webapi.bps.go.id/${version}/api/list/model/subcat/domain/${req.domain}/${
         optVal(['lang', req.lang])
     }${
         optVal(['page', req.page])
     }key/${apiKey}`
-)
+).then(r => r.json())
 
 const getPublication = (req={
     domain: default_domain,
     lang: 'ind',
     page: 0,
     month: '',
-    year: ''
+    year: '',
+    keyword: ''
 })=> fetch(
     `https://webapi.bps.go.id/v1/api/list/model/publication/domain/${req.domain}/${
         optVal(['page', req.page])
@@ -163,6 +164,8 @@ const getPublication = (req={
         optVal(['month', req.month])
     }${
         optVal(['year', req.year])
+    }${
+        optVal(['keyword', req.keyword])
     }key/${apiKey}`
 ).then(resp => resp.json())
 

@@ -1,41 +1,23 @@
 import React from 'react';
-import { FlatList, Pressable, TouchableHighlight, View } from 'react-native';
-import {Text,IconButton, Headline, Caption, Button} from 'react-native-paper'
+import { FlatList, Linking, Pressable, TouchableHighlight, View } from 'react-native';
+import {Text,IconButton, Headline, Caption, Button, Snackbar} from 'react-native-paper'
 import PressRelaseList from "./PressReleaseList"
 
 const HomeView = (props) => {
-
+    const [snack, setSnack] = React.useState(false)
     const [Menus, setMenus] = React.useState([
-        {
-            menu: "Data Series",
-            icon: "chart-line",
-            nav: "DataSeries"
-        },
-        {
-            menu: "Infografis",
-            icon: "image-multiple",
-            nav: "Infografis"
-        },
-        {
-            menu: "Publikasi",
-            icon: "book-open-page-variant",
-            nav: "Publikasi"
-        },
         {
             menu: "Website BPS",
             icon: "earth",
-            nav: "WebBPS"
+            nav: "WebBPS",
+            uri: 'https://minutkab.bps.go.id/'
         },
         {
             menu: "Konsultasi",
             icon: "face-agent",
-            nav: "Konsultasi"
+            nav: "Konsultasi",
+            uri: 'https://silastik.bps.go.id/v3/index.php/site/login/'
         },
-        {
-            menu: "Indikator Strategis",
-            icon: "chart-bar",
-            nav: 'IndikatorStrategis'
-        }
     ])
     return (
         <View
@@ -68,8 +50,16 @@ const HomeView = (props) => {
                             return (
                                 <Pressable android_ripple={true} 
                                 onPress={()=>{
-                                    console.log("menu clicked :",item.menu)
+                                    // console.log("menu clicked :",item.menu)
                                     props.menuPressed(item.nav)
+                                    Linking.canOpenURL(item.uri).then(s => {
+                                        if (s) {
+                                            Linking.openURL(item.uri);
+                                        } else {
+                                            setSnack(true)
+                                            console.log("Don't know how to open URI: " + this.props.url);
+                                        }
+                                    })
                                 }}>
                                     <View style={{
                                         backgroundColor: "#004D91",
@@ -119,6 +109,7 @@ const HomeView = (props) => {
                 }}>Berita Resmi Statistik</Headline>
                 <PressRelaseList/>
             </View>
+            <Snackbar visible={snack}>Maaf membuka link ke browser tidak didukung</Snackbar>
         </View>
     );
 }

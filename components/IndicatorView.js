@@ -89,7 +89,7 @@ const IndicatorView = () => {
         //     }}
         // />
         loaded && !errNetwork ? 
-        <List.Section>
+        <View>
             <FlatList
                 data={indicators}
                 refreshControl={<RefreshControl
@@ -99,7 +99,7 @@ const IndicatorView = () => {
                         getIndicator()
                     }}
                 />}
-                keyExtractor={(item, i) => `indicator-${i}`}
+                keyExtractor={(item, i) => `indicator-${i}-${item.title}`}
                 renderItem={({item, i}) => 
                     <List.Accordion
                         title={item[0].title}
@@ -115,7 +115,7 @@ const IndicatorView = () => {
                     </List.Accordion>
                 }
             />
-        </List.Section>
+        </View>
         :  errNetwork ?  <ScrollView
                 style={{
                     flex: 1

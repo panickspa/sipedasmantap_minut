@@ -104,7 +104,7 @@ const PressReleaseView = (props) => {
                         icon="file-pdf-box"
                         color={'red'}
                         onPress={()=>{
-                            console.log(pR.pdf, pR.title)
+                            // console.log(pR.pdf, pR.title)
                             donwloadPDF(pR.pdf, pR.title)
                         }}/>: <Text>{" "}</Text>}
                 </View>

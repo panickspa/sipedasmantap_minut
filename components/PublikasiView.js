@@ -1,16 +1,17 @@
 import React from 'react'
 import { FlatList, Text, View } from 'react-native'
-import { Chip, Portal, TouchableRipple, Modal, Title } from 'react-native-paper'
+import { Chip, Portal, TouchableRipple, Modal, Title, Searchbar } from 'react-native-paper'
 import { years, months} from '../helper/date'
 import PublikasiList from './PublikasiList'
 
 const YearList = (props)=>{
     const [year, setYear] = React.useState(props.year)
+    const [key, setKey] = React.useState('')
 
     return <FlatList
         keyExtractor={(item,i) => `${item}`}
         scrollEnabled={true}
-        data={years}
+        data={['Semua', ...years]}
         initialNumToRender={10}
         contentContainerStyle={{
             justifyContent: 'center',
@@ -35,36 +36,46 @@ const YearList = (props)=>{
                 </Chip>
             )
         }
+        numColumns={3}
         extraData={year}
     />
 }
 
 const PublikasiView = (props) => {
     // const [year, setYear] = React.useState(props.year)
-    const date = new Date()
-    const y = date.getMonth() == 0 ? years[1] : years[0]
+    // const date = new Date()
+    // const y = date.getMonth() == 0 ? years[1] : years[0]
     const [yModal, setYModal] = React.useState(false)
-    const [year, setYear] = React.useState(y)
-    const [ysModal, setYsModal] = React.useState(y)
+    const [year, setYear] = React.useState('Semua')
+    const [ysModal, setYsModal] = React.useState('Semua')
+    const [keywords, setKeywords] = React.useState('')
+    const [keyword, setKeyword] = React.useState('')
 
     return (
         <View style={{
             marginTop: 10,
-            flex: 1
+            flex: 1,
         }}>
+            <View>
+                <Searchbar
+                    value={keyword}
+                    onChangeText={(e => {
+                        setKeyword(e)
+                    })}
+                    onSubmitEditing={()=>{
+                        setKeywords(keyword)
+                    }}
+                    style={{
+                        marginBottom: 10,
+                        marginHorizontal: 10
+                    }}
+                />
+            </View>
             <View style={{
                 flexDirection: 'row',
                 marginBottom: 10,
                 marginLeft: 10
             }}>
-                {/* <Chip onPress={()=>{
-                    // console.log('month presed')
-                    props.modalM()
-                }}
-                style={{
-                    marginRight: 10,
-                    borderRadius: 100
-                }}>Bulan: {props.month}</Chip> */}
                 <Chip onPress={()=>{
                    setYModal(true)
                 }}>
@@ -73,6 +84,7 @@ const PublikasiView = (props) => {
             </View>
             <PublikasiList
                 year={year}
+                keywords={keywords}
                 // month={props.month}
             />
             <Portal>

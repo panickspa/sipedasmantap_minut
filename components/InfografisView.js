@@ -1,6 +1,6 @@
 import React from 'react'
 import { ScrollView, View, RefreshControl } from 'react-native'
-import { ActivityIndicator, Headline } from 'react-native-paper'
+import { ActivityIndicator, Headline, Searchbar } from 'react-native-paper'
 import {default_domain, getInfografis} from '../helper/api'
 import InfografisList from './InfografisList'
 
@@ -14,11 +14,15 @@ const InfografisView = () => {
     const [counter, setCounter] = React.useState(0)
     const [errNetwork, setErrNetwork] = React.useState(false)
     const [noData, setNoData] = React.useState(false)
+    const [key, setKey] = React.useState('')
+    const [keywords, setKeywords] = React.useState('')
+    const [keyword, setKeyword] = React.useState('')
 
     const getInfo = (req) => {
         setErrNetwork(false)
         getInfografis({
             domain: req.domain,
+            keyword: req.keyword
         }).then(resp => {
             // console.log(resp)
             if(resp.status == "OK")
@@ -42,10 +46,12 @@ const InfografisView = () => {
         })
     }
     React.useEffect(()=>{
+        setInfos([])
         getInfo({
-            domain: default_domain
+            domain: default_domain,
+            keyword: keywords
         })
-    }, [])
+    }, [keywords])
 
     React.useEffect(()=>{
         if(infos.length > 0 ){
@@ -65,7 +71,8 @@ const InfografisView = () => {
             // setCurPage(next)
             getInfografis({
                 domain: default_domain,
-                page: next
+                page: next,
+                keyword: keywords
             })
             .then(resp => {
                 // console.log(resp)
@@ -100,11 +107,24 @@ const InfografisView = () => {
                 flex:1
             }}
         >
+            <Searchbar
+                value={keyword}
+                onChangeText={(e => {
+                    setKeyword(e)
+                })}
+                onSubmitEditing={()=>{
+                    setKeywords(keyword)
+                }}
+                style={{
+                    margin: 10,
+                }}
+            />
             {
         loaded && !errNetwork ? 
-            <InfografisList data={infos}
+            <InfografisList 
+                data={infos}
                 endReached={() => {
-                    console.log('end reach')
+                    // console.log('end reach')
                     // setLoadMore(true)
                     nextInfo()
                 }}

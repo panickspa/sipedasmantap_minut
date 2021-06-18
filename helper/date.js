@@ -3,7 +3,7 @@ const earliestYear = 2006
 const currentYear = () => {
     return Number(date.getFullYear())
 }
-const years = Array.apply(null, {length: (currentYear()-earliestYear-1)}).map((e, i) => (currentYear()-i))
+const years = Array.apply(null, {length: (currentYear()-earliestYear+1)}).map((e, i) => (currentYear()-i))
 const months = [
     'Semua',
     'Januari',

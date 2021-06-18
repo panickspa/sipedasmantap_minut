@@ -87,7 +87,7 @@ const convertData = (data, verv) => {
                 let k = `${verv}${data.var[0].val}${turvar.val}${tahun.val}${turtahun.val}`
                 return {
                     var: data.var[0].value,
-                    title: data.var[0].label,
+                    title: data.var[0].val == 45? 'Jumlah Penduduk Menurut Jenis Kelamin' : data.var[0].val == 58 ? 'PDRB Atas Dasar Harga Berlaku Menurut Pengeluaran' : data.var[0].val == 59 ? 'PDRB Atas Dasar Harga Konstan Menurut Pengeluaran' :data.var[0].label,
                     unit: data.var[0].unit,
                     value: String(data.datacontent[k]),
                     turvar: turvar,

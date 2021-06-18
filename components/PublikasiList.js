@@ -1,6 +1,6 @@
 import React from 'react'
 import { FlatList, RefreshControl, ScrollView, StyleSheet, View, Image } from 'react-native'
-import { ActivityIndicator, Caption, Headline, Button, Text } from 'react-native-paper'
+import { ActivityIndicator, Caption, Headline, IconButton, Button, Text } from 'react-native-paper'
 import { defaultImage, default_domain, getDetPublication, getPublication } from '../helper/api'
 import Share from 'react-native-share'
 import RNFetchBlob from 'rn-fetch-blob'
@@ -14,7 +14,7 @@ const PublikasiWindow =  (props) => {
         abstract
     */
         const donwloadPDF = (url, fileName) => {
-            console.log(url, fileName)
+            // console.log(url, fileName)
             const {config, fs} = RNFetchBlob
             const downloads = fs.dirs.DownloadDir
             return config({
@@ -91,6 +91,17 @@ const PublikasiWindow =  (props) => {
                         // width: viewWidth
                     }}
                 />
+                <Button icon="download"
+                    mode="contained"
+                    color="#004D91"
+                    style={{
+                        marginTop: 20,
+                        marginHorizontal: 10
+                    }}
+                    onPress={()=>{
+                        donwloadPDF(props.pdf, props.title)
+                    }}
+                >Download</Button>
             </View>
             <View style={{
                     flex: 1
@@ -117,11 +128,11 @@ const PublikasiWindow =  (props) => {
                 <View style={{
                     flexDirection: 'row'
                 }}>
-                    <Button icon="download"
+                    {/* <Button icon="download"
                         onPress={()=>{
                             donwloadPDF(props.pdf, props.title)
                         }}
-                    >Download</Button>
+                    >Download</Button> */}
                     {/* <IconButton icon="share-variant"
                         onPress={()=>{
                             sharePDF(props.pdf, props.title)
@@ -162,12 +173,13 @@ const PublikasiList = (props) => {
             domain: default_domain,
             lang: 'ind',
             // month: props.month == 'Semua' ? null : props.month,
-            year: props.year
+            year: props.year == 'Semua' ? null : props.year,
+            keyword: props.keywords
         }).then(resp => {
-            console.log(resp)
+            // console.log(resp)
             if(resp.status == 'OK')
                 if(resp["data-availability"] == "available"){
-                    // console.log(resp.data[0])
+                    // console.log('publis init',resp.data[0])
                     Promise.all(
                         resp.data[1].map(e=>{
                             return getDetPublication({
@@ -208,49 +220,53 @@ const PublikasiList = (props) => {
     
     const nextList = ()=>{
         let next = curPage+1
+        // console.log(curPage, next, curPages)
         if(next < curPages+1){
-            if(!loadMore) setLoadMore(true)
-            getPublication({
-                domain: default_domain,
-                page: next,
-                lang: 'ind',
-                year: props.year
-            }).then(resp => {
-                console.log(resp)
-                if(resp.status == 'OK')
-                    if(resp["data-availability"] == "available"){
-                        setCurPage(resp.data[0].page)
-                        Promise.all(resp.data[1].map(e => {
-                            return getDetPublication({
-                                domain: default_domain,
-                                lang: 'ind',
-                                id: e.pub_id
-                            }).catch(err => err)
-                        })).then(resp2 => {
-                            return resp2.map(e => {
-                                if(e.status == 'OK')
-                                    if(e["data-availability"] == "available") return e.data
-                                return null
-                            }).filter(e => e)
-                        }).then(p => {
-                            setPList([...pList, ...p])
-                        }).catch(err => {
-                            console.log(err)
-                        })
-                    }
-            }).catch(err =>{
-                console.log(err)
-            })
-            .finally(()=>{
-                setLoadMore(false)
-            })
+            if(!loadMore){ 
+                setLoadMore(true)
+                getPublication({
+                    domain: default_domain,
+                    page: next,
+                    lang: 'ind',
+                    year: props.year == 'Semua' ? null : props.year,
+                }).then(resp => {
+                    // console.log(resp)
+                    if(resp.status == 'OK')
+                        if(resp["data-availability"] == "available"){
+                            setCurPage(resp.data[0].page)
+                            setCurPages(resp.data[0].pages)
+                            Promise.all(resp.data[1].map(e => {
+                                return getDetPublication({
+                                    domain: default_domain,
+                                    lang: 'ind',
+                                    id: e.pub_id
+                                }).catch(err => err)
+                            })).then(resp2 => {
+                                return resp2.map(e => {
+                                    if(e.status == 'OK')
+                                        if(e["data-availability"] == "available") return e.data
+                                    return null
+                                }).filter(e => e)
+                            }).then(p => {
+                                setPList([...pList, ...p])
+                            }).catch(err => {
+                                console.log(err)
+                            })
+                        }
+                }).catch(err =>{
+                    console.log(err)
+                })
+                .finally(()=>{
+                    setLoadMore(false)
+                })
+            }
         }
     }
 
     React.useEffect(()=>{
         setPList([])
         getList()
-    }, [props.year])
+    }, [props.year, props.keywords])
     
     return (
         loaded && !errNetwork ? <FlatList
@@ -285,7 +301,7 @@ const PublikasiList = (props) => {
                 alignContent: 'center',
                 justifyContent: 'center',
             }}>
-                <Headline style={{marginTop:10, textAlign: 'center', color: 'black'}}>Tidak Ada Publikasi</Headline>
+                <Headline style={{marginTop:10, justifyContent: 'center',textAlign: 'center', color: 'black'}}>Tidak Ada Publikasi</Headline>
             </ScrollView>
         : errNetwork ? 
         <ScrollView style={{
@@ -293,7 +309,7 @@ const PublikasiList = (props) => {
             alignContent: 'center',
             justifyContent: 'center',
         }}>
-            <Headline style={{marginTop:10}}>Tidak Ada Jaringan, silahkan periksa kembali koneksi anda</Headline>
+            <Headline style={{marginTop:10, justifyContent: 'center'}}>Tidak Ada Jaringan, silahkan periksa kembali koneksi anda</Headline>
         </ScrollView> :
         <ActivityIndicator animating={true} style={{marginTop: 10}}/>
     )
