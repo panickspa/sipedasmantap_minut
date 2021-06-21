@@ -103,7 +103,16 @@ const IndicatorView = () => {
                 renderItem={({item, i}) => 
                     <List.Accordion
                         title={item[0].title}
-                        
+                        style={{
+                            backgroundColor: 'rgb(220,220,240)',
+                            marginTop: 10,
+                            color: '#004D91',
+                            borderRadius: 10,
+                            marginHorizontal: 10,
+                        }}
+                        titleStyle={{
+                            color: '#004D91'
+                        }}   
                     >
                         {/* <Title style={{
                             marginHorizontal: 16,

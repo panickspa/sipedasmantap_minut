@@ -61,7 +61,7 @@ const IndicatorList = (props) => {
                                 fontWeight: 'bold',
                                 padding: 6,
                                 textAlign: 'center'
-                            }}>{item.title} {item.tahun} {item.turvar.val ? `( ${item.turvar.label} )` : '' } </Text>
+                            }}>{item.tahun} {item.turvar.val ? `( ${item.turvar.label} )` : '' } </Text>
                         </View>
                         <View style={{
                             flex: 1,
