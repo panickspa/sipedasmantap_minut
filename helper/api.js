@@ -6,6 +6,10 @@ const version = "v1"
 /* exported constant */
 const apiKey = "23b53e3e77445b3e54c11c60604350bf"
 const defaultImage = require('../images/default.png')
+const defaultLogo = require('../images/ico.png')
+const defaultLogoDark = require('../images/ico_dark.png')
+const defaultBPS = require('../images/bpsminut.png')
+const defaultBPSDark = require('../images/bpsminut_dark.png')
 
 /* private method */
 const optVal = (e=['keyword', 'some keyword']) => e[1] ? `${e[0]}/${e[1]}/` : ''
@@ -227,6 +231,10 @@ exports.getPressReleaseList = getPressReleaseList
 exports.default_domain = default_domain
 exports.getInfografis = getInfografis
 exports.defaultImage = defaultImage
+exports.defaultBPS = defaultBPS
+exports.defaultBPSDark = defaultBPSDark
+exports.defaultLogo = defaultLogo
+exports.defaultLogoDark = defaultLogoDark
 exports.getIndikatorStrategis = getIndikatorStrategis
 exports.getDynData = getDynData
 exports.getVar = getVar

@@ -1,6 +1,6 @@
 import React from 'react'
-import { View, Text, FlatList, ActivityIndicator, SafeAreaView, ScrollView, Dimensions, Button, RefreshControl, } from 'react-native'
-import { Caption, Chip, DataTable, Portal, Title } from 'react-native-paper'
+import { View, Text, FlatList, SafeAreaView, ScrollView, Dimensions, Button, RefreshControl, } from 'react-native'
+import { Caption, Chip, DataTable, Portal, Title, ActivityIndicator } from 'react-native-paper'
 import { default_domain, getDynData } from '../helper/api'
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import { renderValue, renderCapitalOnly } from '../helper/renderer'
@@ -461,6 +461,7 @@ const DetaiDataView = (props) => {
 
     const getD = ()=>{
         // // console.log(props.varaible.var_id)
+        setRefreshing(true)
         if(props.variable.var_id != 0) getDynData({
             domain: default_domain,
             var: props.variable.var_id
@@ -472,6 +473,9 @@ const DetaiDataView = (props) => {
                 }
         }).catch(err => {
             setNetErr(true)
+        }).finally(()=>{
+            setRefreshing(false)
+            setLoaded(true)
         })
     }
 
@@ -522,8 +526,11 @@ const DetaiDataView = (props) => {
                         data={data}
                         variable={props.variable}
                     /> 
-                : loaded & !refreshing && netErr ? <Title>Koneksi Terputus Silahkan Coba Kembali</Title> 
-                : <ActivityIndicator style={{marginTop: 10}} animating={true} />
+                : loaded & !refreshing && netErr ? <Title>Koneksi Terputus Silahkan Coba Kembali</Title>
+                // 
+                : <View style={{flex: 1, alignSelf: 'center', alignContent: 'center', justifyContent: 'center'}}>
+                    {data.var_id ?  <ActivityIndicator style={{marginTop: 10}} animating={true} /> : <Title>Silahkan pilih variabel data</Title> }
+                </View>
             }
         </ScrollView>
     )

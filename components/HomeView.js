@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, Linking, Pressable, TouchableHighlight, View } from 'react-native';
+import { Dimensions, FlatList, Linking, Pressable, TouchableHighlight, View } from 'react-native';
 import {Text,IconButton, Headline, Caption, Button, Snackbar} from 'react-native-paper'
 import PressRelaseList from "./PressReleaseList"
 
@@ -24,18 +24,23 @@ const HomeView = (props) => {
             style={{
                 display: 'flex',
                 flexDirection: 'column',
-                flexBasis: 300,
+                alignSelf: 'stretch',
+                // flexBasis: 300,
                 justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
+                // alignItems: 'center',
+                // width: '100%',
+                width: Dimensions.get('window').width,
                 flex:1
             }}
         >
             <View style={{
                 justifyContent:'center',
                 alignItems:'center',
+                justifyContent: 'center',
+                alignSelf: 'stretch',
                 flexDirection: 'row',
-                width:'100%',
+                // width:'100%',
+                width: Dimensions.get('window').width,
                 padding: 4,
                 marginVertical: 10,
             }}>
@@ -92,13 +97,13 @@ const HomeView = (props) => {
                 </View>
             </View>
             <View style={{
-                // alignSelf: "stretch",
+                alignSelf: "stretch",
                 flex: 2,
                 flexBasis: "auto",
                 justifyContent: 'flex-start',
                 flexDirection: 'column',
                 backgroundColor: "#EFF8FF",
-                width: "100%"
+                width: Dimensions.get('window').width
             }}>
                 <Headline 
                     style={{

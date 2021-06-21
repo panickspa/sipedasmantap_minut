@@ -1,6 +1,6 @@
 import React from 'react'
 import { FlatList, useWindowDimensions, Dimensions, View, Image, RefreshControl } from 'react-native'
-import {Headline, IconButton} from 'react-native-paper'
+import {Divider, Headline, IconButton, Title} from 'react-native-paper'
 import {defaultImage} from '../helper/api'
 import Share from 'react-native-share'
 import RNFetchBlob from 'rn-fetch-blob'
@@ -73,6 +73,11 @@ const InfografisList = (props) => {
                         marginVertical: 8,
                         // padding: 8
                     }}>
+                        
+                        <Title style={{
+                            marginLeft: 5
+                        }}>{item.title}</Title>
+                        <Divider style={{marginBottom: 10}}/>
                         <View style={{
                             maxHeight: 500,
                             width: viewWidth
@@ -92,6 +97,7 @@ const InfografisList = (props) => {
                                 loadingIndicatorSource={defaultImage}
                             />
                         </View>
+                        <Divider style={{marginBottom: 10}}/>
                         <View style={{
                             flexDirection: 'row',
                             justifyContent: 'flex-end'
@@ -101,15 +107,14 @@ const InfografisList = (props) => {
                                 let ext = item.img.split('.')
                                 donwload(item.dl, item.title, ext[ext.length-1])
                             }}
+                            size={26}
                             style={{marginLeft: 8}}/>
                             <IconButton onPress={()=>{
                                 let ext = item.img.split('.')
                                 shareImage(item.dl, ext[ext.length-1], item.title)
-                            }} icon="share-variant"/>
+                            }} size={26} icon="share-variant"/>
                         </View>
-                        <Headline style={{
-                            marginLeft: 5
-                        }}>{item.title}</Headline>
+                        
                     </View>
                 )
             }}

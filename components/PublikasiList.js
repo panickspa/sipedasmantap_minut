@@ -24,10 +24,14 @@ const PublikasiWindow =  (props) => {
                     notification: true,
                     path: downloads+'/'+fileName+'.pdf'
                 }
-            }).fetch('GET', url).then(res => fs.scanFile([{
-                path: res.path(),
-                mime: `application/pdf`
-            }]))
+            }).fetch('GET', url).then(res => {
+                fs.scanFile([{
+                    path: res.path(),
+                    mime: `application/pdf`
+                }]).catch(err => {
+                    console.log(err)
+                })
+            })
             .catch(err => {
                 console.log(err)
             })

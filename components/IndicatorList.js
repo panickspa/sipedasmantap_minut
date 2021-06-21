@@ -30,64 +30,64 @@ const IndicatorList = (props) => {
             keyExtractor={(item)=>item.indicator_id}
             renderItem={({item})=>{
                 return(
-                    <List.Item 
-                        titleStyle={{
-                            fontWeight: 'bold',
-                            color: 'black'
-                        }}
-                        descriptionStyle={{
-                            fontWeight: 'bold',
-                            color: 'grey'
-                        }}
-                        title={`${item.title} ${item.tahun} ${item.turvar.val ? `( ${item.turvar.label} )` : '' }`}
-                        description={`${renderValue(item.value, item.unit)}`}
-                    />
-                    // <View style={{
-                    //     width: boxWidth,
-                    //     minheight: (boxWidth/1.5),
-                    //     padding: 8,
-                    //     // backgroundColor: "#004D91",
-                    //     margin: 8,
-                    // }}>
-                    //     <View style={{
-                    //         justifyContent: 'center',
-                    //         alignItems: 'stretch'
-                    //     }}>
-                    //         <Text style={{
-                    //             borderColor: "#004D91",
-                    //             borderWidth: 2,
-                    //             borderTopLeftRadius: 4,
-                    //             borderTopRightRadius: 4,
-                    //             fontWeight: 'bold',
-                    //             padding: 6,
-                    //             textAlign: 'center'
-                    //         }}>{item.title} {item.tahun} {item.turvar.val ? `( ${item.turvar.label} )` : '' } </Text>
-                    //     </View>
-                    //     <View style={{
-                    //         flex: 1,
-                    //         borderBottomLeftRadius: 4,
-                    //         borderBottomRightRadius: 4,
-                    //         backgroundColor: '#004D91',
-                    //         padding: 4,
-                    //         justifyContent: 'center',
-                    //         alignItems: 'center'
-                    //     }}>
-                    //         <View style={{
-                    //             alignItems: 'center',
-                    //             // flexWrap: 'wrap',
-                    //             width: '100%',
-                    //             justifyContent: 'center'
-                    //         }}>
-                    //             <Title style={{
-                    //                 color: 'white',
-                    //                 textAlign: 'center',
-                    //             }}>{renderValue(item.value, item.unit)}</Title>
-                    //         </View>
-                    //     </View>
-                    // </View>
+                    // <List.Item 
+                    //     titleStyle={{
+                    //         fontWeight: 'bold',
+                    //         color: 'black'
+                    //     }}
+                    //     descriptionStyle={{
+                    //         fontWeight: 'bold',
+                    //         color: 'grey'
+                    //     }}
+                    //     title={`${item.title} ${item.tahun} ${item.turvar.val ? `( ${item.turvar.label} )` : '' }`}
+                    //     description={`${renderValue(item.value, item.unit)}`}
+                    // />
+                    <View style={{
+                        width: boxWidth,
+                        minheight: (boxWidth/1.5),
+                        padding: 8,
+                        // backgroundColor: "#004D91",
+                        margin: 8,
+                    }}>
+                        <View style={{
+                            justifyContent: 'center',
+                            alignItems: 'stretch'
+                        }}>
+                            <Text style={{
+                                borderColor: "#004D91",
+                                borderWidth: 2,
+                                borderTopLeftRadius: 4,
+                                borderTopRightRadius: 4,
+                                fontWeight: 'bold',
+                                padding: 6,
+                                textAlign: 'center'
+                            }}>{item.title} {item.tahun} {item.turvar.val ? `( ${item.turvar.label} )` : '' } </Text>
+                        </View>
+                        <View style={{
+                            flex: 1,
+                            borderBottomLeftRadius: 4,
+                            borderBottomRightRadius: 4,
+                            backgroundColor: '#004D91',
+                            padding: 4,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <View style={{
+                                alignItems: 'center',
+                                // flexWrap: 'wrap',
+                                width: '100%',
+                                justifyContent: 'center'
+                            }}>
+                                <Title style={{
+                                    color: 'white',
+                                    textAlign: 'center',
+                                }}>{renderValue(item.value, item.unit)}</Title>
+                            </View>
+                        </View>
+                    </View>
                 )
             }}
-            // numColumns={2}
+            numColumns={2}
         />
     )
 }

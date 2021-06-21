@@ -61,11 +61,11 @@ const DataView = () => {
     }
 
     function subDisabled(){
-        return category.subcat_id == -1 && subjects.length > 0
+        return category.subcat_id == -1
     }
 
     function varDisabled(){
-        return subject.sub_id == 0 && vars.length > 0
+        return subject.sub_id == 0
     }
 
     const getCat = () => {
@@ -214,7 +214,9 @@ const DataView = () => {
                 flex:1
             }}
             style={{
-                flex:1
+                flex:1,
+                justifyContent:'center',
+                alignItems: 'center'
             }}
         >
             <View style={{
@@ -478,7 +480,7 @@ const DataView = () => {
                         onRefresh={()=>{
                             getSub()
                         }}>
-                            {subsNetError ? <Title>Gagal memuat subjek, silahkan refresh kembali</Title> : <ActivityIndicator animating={true} />}
+                            { subsNetError ? <Title>Gagal memuat subjek, silahkan refresh kembali</Title> : <ActivityIndicator animating={true} />}
                         </ScrollView> 
                     }
                 </Modal>
