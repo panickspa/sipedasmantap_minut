@@ -19,12 +19,14 @@ const optValNum = (e=['var_id', 1] ) => e[1] > -1 ? `${e[0]}/${e[1]}/` : ''
 /* exported method */
 const getPressReleaseDetail = (domain,id) => fetch(
     `https://webapi.bps.go.id/${version}/api/view/domain/${domain}/model/pressrelease/lang/ind/id/${id}/key/${apiKey}/`
-)
+).then(resp => resp.json())
 
 const getPressReleaseList = (req = {
     domain: default_domain,
-    page: 0,
-}) => fetch(`https://webapi.bps.go.id/${version}/api/list/model/pressrelease/lang/ind/domain/${req.domain}/page/${optVal('page', req.page)}/key/${apiKey}/`)
+    page: 1,
+}) => fetch(
+    `https://webapi.bps.go.id/${version}/api/list/model/pressrelease/lang/ind/domain/${req.domain}/${optValNum(['page', req.page])}key/${apiKey}/`
+).then(resp => resp.json())
 
 const getInfografis = (req = {
     domain: default_domain,

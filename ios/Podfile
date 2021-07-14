@@ -18,6 +18,8 @@ target 'sipedasmantap_minut' do
 
   pod 'RNShare', :path => '../node_modules/react-native-share'
 
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-async-storage/async-storage'
+
   target 'sipedasmantap_minutTests' do
     inherit! :complete
     # Pods for testing
