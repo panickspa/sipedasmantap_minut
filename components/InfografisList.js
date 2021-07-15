@@ -69,7 +69,7 @@ const InfografisList = props => {
       data={props.data}
       // extraData={props.extraData}
       keyExtractor={(item, index) => `info-${item.inf_id}-${index}`}
-      onEndReachedThreshold={4}
+      onEndReachedThreshold={10}
       onEndReached={() => {
         props.endReached();
       }}

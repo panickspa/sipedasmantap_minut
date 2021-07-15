@@ -353,7 +353,7 @@ const PublikasiList = props => {
       }}
       scrollEnabled={true}
       initialNumToRender={6}
-      onEndReachedThreshold={4}
+      onEndReachedThreshold={10}
       onEndReached={() => {
         nextList();
       }}

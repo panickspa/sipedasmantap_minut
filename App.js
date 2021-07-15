@@ -39,6 +39,7 @@ import DataView from './components/DataView';
 
 // import {years} from './helper/date';
 import SplashView from './components/SplashView';
+import WelcomeView from './components/WelcomeView';
 
 const IconMaterial = MaterialCommunityIcons;
 
@@ -111,6 +112,8 @@ const MainScreen = () => {
         flex: 1,
         width: Dimensions.get('window').width,
       }}
+      lazy={true}
+      backBehavior="none"
       tabBarPosition="bottom"
       tabBarOptions={{
         showIcon: true,
@@ -233,6 +236,7 @@ const App = () => {
 
           if (state !== undefined) {
             // set default tab index current in home
+            // navigate('Welcome')
             state.routes[state.index].state.index = 2
             setInitialState(state);
             // eslint-disable-next-line eqeqeq
@@ -319,24 +323,30 @@ const App = () => {
             JSON.stringify(state),
           ).then(() => {
             // eslint-disable-next-line eqeqeq
-            if (state.routeNames[state.index] == 'Main') {
+            // console.log(state)
+            if (state.name == 'Main') {
               let i = state.routes[state.index].state.index;
               setTitle(state.routes[state.index].state.routeNames[i]);
             } else {
-              setTitle(state.routeNames[state.index]);
+              // console.log('initial name', state.index)
+              // setTitle(state.routeNames[state.index]);
             }
+          }).catch(err => {
+            console.log(err)
           });
         }}
         ref={navigationRef}>
         <Stack.Navigator
-          initialRouteName={'Main'}
+          initialRouteName={'Welcome'}
           headerMode={'screen'}
           screenOptions={{
             header: Header,
             animationEnabled: true,
           }}>
           <Stack.Screen name="Main" component={MainScreen} />
-          <Stack.Screen name="About" component={AboutView} />
+          <Stack.Screen options={{
+            headerShown: false
+          }} name="About" component={AboutView} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

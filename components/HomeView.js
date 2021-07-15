@@ -95,7 +95,7 @@ const HomeView = props => {
                       icon={item.icon}
                       mode={'contained'}
                       color="white"
-                      size={24}
+                      size={18}
                     />
                     <Caption
                       style={{
