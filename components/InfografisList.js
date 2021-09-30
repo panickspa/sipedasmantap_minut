@@ -20,7 +20,7 @@ const InfografisList = props => {
       addAndroidDownloads: {
         useDownloadManager: true,
         notification: true,
-        path: downloads + '/' + `${fileName}`,
+        path: downloads + '/' + `${fileName}.${ext}`,
         mime: `image/${ext}`,
         mediaScannable: true,
       },
@@ -43,24 +43,45 @@ const InfografisList = props => {
   };
 
   const shareImage = (url, ext, message) => {
-    const {config, fs} = RNFetchBlob;
-    return config({
+    const {fs} = RNFetchBlob;
+    let filePath = null;
+    return RNFetchBlob.config({
       fileCache: true,
+      appendExt: ext
     })
       .fetch('GET', url)
       .then(resp => {
         // the image path you can use it directly with Image component
         // eslint-disable-next-line no-undef
-        imagePath = resp.path();
-        return resp.readFile('base64');
+        // imagePath = resp.path();
+        // console.log(resp.bas)
+        filePath = resp.path();
+        return resp.readFile("base64");
       })
       .then(async base64Data => {
-        var base64Data = `data:image/${ext};base64,` + base64Data;
-        // here's base64 encoded image
-        await Share.open({url: base64Data, message: message});
-        // remove the file from storage
-        // eslint-disable-next-line no-undef
-        return fs.unlink(imagePath);
+        if(base64Data){
+          // console.log(typeof base64Data)
+          let data = await base64Data
+          const base64 = `data:image/${ext};base64,${data}`;
+          // here's base64 encoded image
+          console.log(base64)
+          Share.open({url: base64, message: message})
+          .then(e =>{
+            console.log(e)
+          })
+          .catch(()=>{
+            console.log("error share promise")
+          }).finally(e =>{
+            console.log("output share", e)
+          })
+          fs.unlink(filePath)
+          // remove the file from storage
+          // let unlink = fs.unlink(imagePath)
+          // eslint-disable-next-line no-undef
+          // return unlink;
+        }
+      }).catch(() =>{
+        console.log("Error share")
       });
   };
 

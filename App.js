@@ -30,16 +30,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import HomeView from './components/HomeView';
+import HomeView from './components/BRSView';
 import AboutView from './components/AboutView';
 import InfografisView from './components/InfografisView';
-import IndicatorView from './components/IndicatorView';
+import PressReleaseView from './components/PressReleaseView';
 import PublikasiView from './components/PublikasiView';
 import DataView from './components/DataView';
 
 // import {years} from './helper/date';
 import SplashView from './components/SplashView';
 import WelcomeView from './components/WelcomeView';
+import IndicatorView from './components/IndicatorView';
+import BRSView from './components/BRSView';
 
 const IconMaterial = MaterialCommunityIcons;
 
@@ -82,8 +84,8 @@ const nav = {
   Infografis: {
     icon: 'image-multiple',
   },
-  'Indikator Strategis': {
-    icon: 'chart-bar',
+  'Berita Resmi Statistik': {
+    icon: 'newspaper',
   },
 };
 
@@ -178,9 +180,9 @@ const MainScreen = () => {
       })}>
       <Tab.Screen name="Data Dinamis" component={DataView} />
       <Tab.Screen name="Infografis" component={InfografisView} />
-      <Tab.Screen name="Home" component={HomeView} />
+      <Tab.Screen name="Home" component={IndicatorView} />
       <Tab.Screen name="Publikasi" component={PublikasiView} />
-      <Tab.Screen name="Indikator Strategis" component={IndicatorView} />
+      <Tab.Screen name="Berita Resmi Statistik" component={BRSView} />
     </Tab.Navigator>
   );
 };
@@ -214,7 +216,7 @@ const App = () => {
         },
       );
     } catch (error) {
-      console.log('permission error');
+      console.log('permission error', error);
     }
   }, []);
 
@@ -324,12 +326,13 @@ const App = () => {
           ).then(() => {
             // eslint-disable-next-line eqeqeq
             // console.log(state)
-            if (state.name == 'Main') {
+            if (state.routeNames[state.index] == 'Main') {
               let i = state.routes[state.index].state.index;
               setTitle(state.routes[state.index].state.routeNames[i]);
             } else {
+              console.log(state.routeNames[state.index])
               // console.log('initial name', state.index)
-              // setTitle(state.routeNames[state.index]);
+              setTitle(state.routeNames[state.index]);
             }
           }).catch(err => {
             console.log(err)

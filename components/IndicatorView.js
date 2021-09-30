@@ -9,6 +9,8 @@ import {
   RefreshControl,
   View,
   Dimensions,
+  Linking, 
+  Pressable,
 } from 'react-native';
 
 import {
@@ -16,9 +18,11 @@ import {
   List,
   Headline,
   Divider,
-  // Text,
+  Text,
   Title,
   Snackbar,
+  IconButton,
+  Caption
 } from 'react-native-paper';
 
 // import {getIndikatorStrategis, getSubCat, getSubject} from '../helper/api';
@@ -27,6 +31,7 @@ import {
 import {getAll} from '../helper/indicator';
 import {LineChart} from 'react-native-chart-kit';
 import {renderValue} from '../helper/renderer';
+import {HeaderTitle} from '@react-navigation/stack';
 /*
 
     Category:
@@ -37,66 +42,6 @@ import {renderValue} from '../helper/renderer';
 
 */
 
-const decimal = e => {
-  return String(e).length > 6 ? 0 : 2;
-};
-
-// const LineChartWTurvar = props => {
-//   let datasets = props.turvar.map((t,i,s) => {
-//     return {
-//       data : props.data.filter(d => d.turvar.val == t.val).map(d => d.value),
-//       color: (o) => {
-//         let r = Math.floor(255-((255/s.length)*(i+1)))
-//         let g = Math.floor(((77/s.length)*(i+1)))
-//         let b = Math.floor(220-((220/s.length)*(i+1)))
-//         return `rgb(${
-//           r < 0 ? 0 : r
-//         },${
-//           g < 0 ? 0 : g
-//         },${
-//           b < 0 ? 0 : b
-//         })`
-//       },
-//     };
-//   });
-//   let labels = props.data
-//     .filter(d => d.turvar.val == props.turvar[0].val)
-//     .map(d => d.tahun);
-//   // return {
-//   //   label: labels,
-//   //   datasets: datasets,
-//   // };
-//   return (
-//     // {
-//     //   datasets: datasets,
-//     //   labels: labels.length,
-//     // }
-//     <LineChart
-//       data={{
-//         labels: labels,
-//         datasets: datasets,
-//         legend: props.turvar.map(e => e.label)
-//       }}
-//       width={Dimensions.get('window').width - 20}
-//       height={Dimensions.get('window').height / 4}
-//       chartConfig={{
-//         backgroundGradientFrom: 'rgb(220,220,240)',
-//         backgroundGradientFromOpacity: 1,
-//         backgroundGradientTo: 'rgb(220,220,240)',
-//         backgroundGradientToOpacity: 1,
-//         color: (opacity = 1) => `rgba(0, 77, 145, ${opacity})`,
-//         decimalPlaces: decimal(props.data[0].value),
-//       }}
-//       formatXLabel={e => {
-//         let d = props.data;
-//         return e == d[0].tahun || e == d[d.length - 1].tahun ? e : ' ';
-//       }}
-//       // verticalLabelRotation={30}
-//       horizontalLabelRotation={-45}
-//     />
-//   );
-// };
-
 const IndicatorGraph = props => {
   if (props.item.turvar.length > 1)
     return (
@@ -105,8 +50,6 @@ const IndicatorGraph = props => {
           marginLeft: 10,
           marginTop: 10,
         }}>
-        {/* {<Text>{JSON.stringify(LineChartWTurvar({data:props.item.data, turvar: props.item.turvar}))}</Text>} */}
-        {/* <LineChartWTurvar data={props.item.data} turvar={props.item.turvar} /> */}
         {props.item.turvar.map(e => {
           let data = props.item.data.filter(d => d.turvar.val == e.val);
           return (
@@ -128,7 +71,6 @@ const IndicatorGraph = props => {
                   datasets: [
                     {
                       data: data.map(e => Number(e.value)),
-                      // color: (opacity = 1) => `rgba(255, 255, 255, 1)`
                     },
                   ],
                 }}
@@ -140,7 +82,7 @@ const IndicatorGraph = props => {
                   backgroundGradientTo: 'rgb(220,220,240)',
                   backgroundGradientToOpacity: 1,
                   color: (opacity = 1) => `rgba(0, 77, 145, ${opacity})`,
-                  decimalPlaces: decimal(data[0].value),
+                  decimalPlaces: 2,
                 }}
                 formatXLabel={e => {
                   let d = props.item.data;
@@ -155,6 +97,14 @@ const IndicatorGraph = props => {
                     `${renderValue(String(e.value), props.item.data[0].unit)}`,
                   );
                 }}
+                renderDotContent={({x,y,index,indexData}) => <Text
+                  style={{
+                    position: 'absolute', 
+                    top: y+3, 
+                    left: index == 2 ? x-30 : x+10,
+                  }}
+                  key={`i-${index}-${indexData}-${y}-${x}`}
+                >{renderValue(String(indexData), props.item.data[0].unit)}</Text>}
               />
               <Divider
                 style={{
@@ -183,33 +133,37 @@ const IndicatorGraph = props => {
           datasets: [
             {
               data: props.item.data.map(e => e.value),
-              // color: (opacity = 1) => `rgba(255, 255, 255, 1)`
             },
           ],
         }}
         width={Dimensions.get('window').width - 20}
         height={Dimensions.get('window').height / 4}
-        // withVerticalLabels={false}
         chartConfig={{
           backgroundGradientFrom: 'rgb(220,220,240)',
           backgroundGradientFromOpacity: 1,
           backgroundGradientTo: 'rgb(220,220,240)',
           backgroundGradientToOpacity: 1,
           color: (opacity = 1) => `rgba(0, 77, 145, ${opacity})`,
-          decimalPlaces: decimal(props.item.data[0].value),
+          decimalPlaces: 2,
         }}
         formatXLabel={e => {
           let d = props.item.data;
           return e == d[0].tahun || e == d[d.length - 1].tahun ? e : ' ';
         }}
-        // verticalLabelRotation={30}
         horizontalLabelRotation={-45}
         onDataPointClick={e => {
           props.onPointClick(
             `${renderValue(String(e.value), props.item.data[0].unit)}`,
           );
-          // props.onPointClick(String(e.value))
         }}
+        renderDotContent={
+          ({x,y,index,indexData}) => <Text style={{
+              position: 'absolute', 
+              top: y+3, 
+              left: index == 2 ? x-30 : x+10,
+            }}
+            key={`i-${index}-${indexData}-${y}-${x}`}
+          >{renderValue(String(indexData), props.item.data[0].unit)}</Text>}
       />
       <Divider
         style={{
@@ -226,6 +180,31 @@ const IndicatorView = () => {
   const [errNetwork, setErrNetwork] = React.useState(false);
   const [snack, setSnack] = React.useState(false);
   const [tSnack, setTSnack] = React.useState('');
+  const [Menus, setMenus] = React.useState([
+    {
+      menu: 'BPS Kab Minut',
+      icon: 'earth',
+      nav: 'WebBPS',
+      uri: 'https://minutkab.bps.go.id/',
+    },{
+      menu: 'BPS Prov Sulut',
+      icon: 'earth',
+      nav: 'WebBPS',
+      uri: 'https://sulut.bps.go.id/',
+    },
+    {
+      menu: 'Konsultasi',
+      icon: 'face-agent',
+      nav: 'Konsultasi',
+      uri: 'https://silastik.bps.go.id/v3/index.php/site/login/',
+    },
+    {
+      menu: 'Ulas Kami',
+      icon: 'comment',
+      nav: 'Review',
+      uri: 'http://s.bps.go.id/7106_evaluasi_SILEOSMINUT  ',
+    },
+  ]);
 
   React.useEffect(() => {
     if (tSnack) setSnack(true);
@@ -235,18 +214,7 @@ const IndicatorView = () => {
     setErrNetwork(false);
     getAll()
       .then(e => {
-        setIndicators(
-          e.map(ind => {
-            // console.log(ind);
-            return ind;
-            //     .sort(function(a, b) {
-            //     return Number(b.tahun) - Number(a.tahun)
-            //   })
-          }),
-        );
-        // setIndicators(e.flat().sort(function(a, b) {
-        //     return Number(b.tahun) - Number(a.tahun)
-        //   }))
+        setIndicators(e);
       })
       .catch(() => {
         // console.log(err)
@@ -265,24 +233,94 @@ const IndicatorView = () => {
   }, [indicators, errNetwork]);
 
   return (
-    // <ScrollView>
-    //     <Text>{JSON.stringify(indicators.map(e => [e.key]))}</Text>
-    // </ScrollView>
-    // <FlatList
-    //     data={indicators}
-    //     scrollEnabled={true}
-    //     keyExtractor={(item) => item.key}
-    //     renderItem={({item}) => {
-    //         return (<Text>{item.key}</Text>)
-    //     }}
-    // />
+
     loaded && !errNetwork ? (
       <View>
         <FlatList
+          ListHeaderComponent={
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                alignSelf: 'stretch',
+                flexDirection: 'column',
+                // width: Dimensions.get('window').width,
+                padding: 4,
+                marginVertical: 10,
+              }}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <FlatList
+                  data={Menus}
+                  keyExtractor={item => `menu-${item.nav}`}
+                  renderItem={({item}) => {
+                    return (
+                      <Pressable
+                        android_ripple={true}
+                        onPress={() => {
+                          Linking.canOpenURL(item.uri).then(s => {
+                            if (s) {
+                              Linking.openURL(item.uri);
+                            } else {
+                              setSnack(true);
+                              console.log(
+                                "Don't know how to open URI: " + this.props.url,
+                              );
+                            }
+                          });
+                        }}>
+                        <View
+                          style={{
+                            backgroundColor: '#004D91',
+                            padding: 6,
+                            width: 84,
+                            height: 84,
+                            margin: 2,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: 4,
+                          }}>
+                          <IconButton
+                            icon={item.icon}
+                            mode={'contained'}
+                            color="white"
+                            size={14}
+                          />
+                          <Caption
+                            style={{
+                              color: 'white',
+                              alignItems: 'center',
+                              width: '100%',
+                              textAlign: 'center',
+                            }}>
+                            {item.menu}
+                          </Caption>
+                        </View>
+                      </Pressable>
+                    );
+                  }}
+                  numColumns="4"
+                />
+              </View>
+              <Headline style={{
+                fontSize: 30,
+                fontWeight: 'bold',
+                marginTop: 20,
+              }}>
+                Indikator Strategis
+              </Headline>
+            </View>
+          }
+          // scrollEnabled={true}
+          // nestedScrollEnabled={true}
           contentContainerStyle={{
             paddingBottom: 10,
           }}
           data={indicators}
+          keyExtractor={item => `indicator-accordion-${item.data[0].var}`}
           refreshControl={
             <RefreshControl
               refreshing={!loaded}
@@ -292,12 +330,12 @@ const IndicatorView = () => {
               }}
             />
           }
-          keyExtractor={(item, i) => `indicator-${i}-${item.data[0].var}`}
           renderItem={({item}) => (
             <List.Accordion
               title={`${item.data[0].title} ${
                 item.data[0].unit.length ? `(${item.data[0].unit})` : ''
               }`}
+              description={`${renderValue(String(item.data[item.data.length-1].value), item.data[item.data.length-1].unit)} (${item.data[item.data.length-1].tahun})`}
               style={{
                 backgroundColor: 'rgb(220,220,240)',
                 marginTop: 10,
@@ -330,27 +368,27 @@ const IndicatorView = () => {
         </Snackbar>
       </View>
     ) : errNetwork ? (
-      <ScrollView
+      <View
         style={{
           flex: 1,
         }}
-        refreshControl={
-          <RefreshControl
-            refreshing={!loaded}
-            onRefresh={() => {
-              // setLoaded(false)
-              setIndicators([]);
-              getIndicator();
-            }}
-          />
-        }>
+        // refreshControl={
+        //   <RefreshControl
+        //     refreshing={!loaded}
+        //     onRefresh={() => {
+        //       setIndicators([]);
+        //       getIndicator();
+        //     }}
+        //   />
+        // }
+        >
         <Headline
           style={{
             textAlign: 'center',
           }}>
           Internet Tidak Ada, silahkan cek kembali koneksi anda
         </Headline>
-      </ScrollView>
+      </View>
     ) : (
       <ActivityIndicator style={{marginTop: 10}} animating={true} />
     )

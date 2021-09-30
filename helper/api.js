@@ -10,6 +10,7 @@ const defaultLogo = require('../images/ico.png')
 const defaultLogoDark = require('../images/ico_dark.png')
 const defaultBPS = require('../images/bpsminut.png')
 const defaultBPSDark = require('../images/bpsminut_dark.png')
+const splashLogo = require('../images/splash.png')
 
 /* private method */
 const optVal = (e=['keyword', 'some keyword']) => e[1] ? `${e[0]}/${e[1]}/` : ''
@@ -234,6 +235,7 @@ exports.default_domain = default_domain
 exports.getInfografis = getInfografis
 exports.defaultImage = defaultImage
 exports.defaultBPS = defaultBPS
+exports.splashLogo = splashLogo
 exports.defaultBPSDark = defaultBPSDark
 exports.defaultLogo = defaultLogo
 exports.defaultLogoDark = defaultLogoDark

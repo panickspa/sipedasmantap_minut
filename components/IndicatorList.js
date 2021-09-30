@@ -22,32 +22,9 @@ const IndicatorList = props => {
   return (
     <FlatList
       data={props.data}
-      // initialNumToRender={4}
-      // onEndReachedThreshold={2}
-      // onEndReached={()=>{
-      //     props.endReached()
-      // }}
-      // refreshControl={<RefreshControl
-      //     refreshing={!props.loaded}
-      //     onRefresh={() => {
-      //         props.onRefresh()
-      //     }}
-      // />}
       keyExtractor={item => item.indicator_id}
       renderItem={({item}) => {
         return (
-          // <List.Item
-          //     titleStyle={{
-          //         fontWeight: 'bold',
-          //         color: 'black'
-          //     }}
-          //     descriptionStyle={{
-          //         fontWeight: 'bold',
-          //         color: 'grey'
-          //     }}
-          //     title={`${item.title} ${item.tahun} ${item.turvar.val ? `( ${item.turvar.label} )` : '' }`}
-          //     description={`${renderValue(item.value, item.unit)}`}
-          // />
           <View
             style={{
               width: boxWidth,

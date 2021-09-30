@@ -11,6 +11,10 @@ const renderValue = (val, unit) => {
     : `${e} ${unit != 'Tidak Ada Satuan' ? unit : ''}`;
 };
 
+const shortValue = (e) =>{
+  return String(e).length > e
+}
+
 const renderCapitalOnly = val => {
   return val.replace(/([a-z\s])/g, '');
 };

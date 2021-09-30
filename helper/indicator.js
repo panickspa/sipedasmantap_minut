@@ -107,7 +107,7 @@ const indStratList = {
 
 const convertData = (data, verv) => {
   // let key = `${indStratList.jpm.vervar}${indStratList.jpm.var}`
-  return {
+  const converted =  {
     turvar: data.turvar,
     data: data.turvar
       .map((turvar, i) => {
@@ -141,8 +141,38 @@ const convertData = (data, verv) => {
           .flat();
       })
       .flat()
-      .filter(e => e.value),
+      .filter(e => e.value)
+      .sort((a,b) => (Number(b.tahun)-Number(a.tahun)))
+      ,
   };
+  // console.log(converted.turvar)
+  // if(converted.data.length > 2) {
+  //   return converted.data.sort(
+  //     function(a, b){
+  //       return Number(b.tahun - a.tahun)
+  //     }
+  //   ).splice(0,3)
+  //   console.log(t.length)
+  // }
+  // return converted
+  if(converted.data[0].tahun){
+    return converted.data.length > 3 ? data.turvar.length > 1? {
+      turvar: converted.turvar,
+      data: converted.data
+      .splice(0,(3*data.turvar.length))
+      .sort((a,b) => (Number(a.tahun)-Number(b.tahun)))
+    } : {
+      turvar: converted.turvar,
+      data: converted.data
+      .splice(0,3)
+      .sort((a,b) => (Number(a.tahun)-Number(b.tahun)))
+    } : {
+      turvar: converted.turvar,
+      data: converted.data.sort((a,b) => (Number(a.tahun)-Number(b.tahun)))
+    }
+  }else{
+    return converted
+  }
 };
 
 const getAll = () =>

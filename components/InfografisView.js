@@ -69,7 +69,7 @@ const InfografisView = () => {
 
   const nextInfo = () => {
     const next = curPage + 1;
-    console.log(next);
+    // console.log(next);
     if (next < curPages + 1) {
       if (!loadMore) setLoadMore(true);
       // setCurPage(next)

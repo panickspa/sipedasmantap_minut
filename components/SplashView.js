@@ -2,7 +2,7 @@
 import React from 'react';
 import {Dimensions, Image, View} from 'react-native';
 import {Portal, Headline, Subheading} from 'react-native-paper';
-import {defaultBPS, defaultLogo} from '../helper/api';
+import {defaultBPS, defaultLogo, splashLogo} from '../helper/api';
 
 const SplashView = () => {
   //   const sIco = () => Dimensions.get('screen').width / 4
@@ -20,26 +20,31 @@ const SplashView = () => {
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
+            // width: 500
           }}>
-          <View style={{
-            flex: 2
-          }}/>
-          <View
-            style={{
-              flex: 2,
-              justifyContent: 'center',
-              alignItems: 'center',
-              alignSelf: 'center',
-              // backgroundColor: 'green',
-              // width: 200
-            }}>
-            <Image source={defaultLogo} resizeMode="center" style={{
-              justifyContent: 'flex-end',
-              alignItems: 'flex-end',
-              alignSelf: 'flex-end'
-            }} />
-          </View>
-          <View style={{
+            <View
+              style={{
+                // flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                alignSelf: 'center',
+                // backgroundColor: 'green',
+                // width: 500
+              }}>
+                <View style={{
+                  width: '62%',
+                  // backgroundColor: 'red',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Image source={splashLogo} style={{
+                    width: '100%'
+                  }} resizeMode="contain"/>
+                </View>
+            </View>
+          {/* <View style={{
             flex: 3,
             justifyContent: 'flex-start',
             // backgroundColor: 'blue'
@@ -59,7 +64,7 @@ const SplashView = () => {
                 }}>
                 Badan Pusat Statistik Kabupaten Minahasa Utara
             </Subheading>
-          </View>
+          </View> */}
         </View>
         <View
           style={{
