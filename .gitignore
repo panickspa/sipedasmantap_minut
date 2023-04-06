@@ -1,3 +1,7 @@
+# java hprof
+*.hprof
+java_pid22672.hprof
+
 # OSX
 #
 .DS_Store
@@ -29,6 +33,9 @@ build/
 local.properties
 *.iml
 
+#build
+build/app/build
+
 # node.js
 #
 node_modules/
@@ -57,3 +64,4 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
